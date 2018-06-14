@@ -76,6 +76,7 @@ class ObjectField extends Component {
       idPrefix,
       onBlur,
       onFocus,
+      className,
       registry = getDefaultRegistry(),
     } = this.props;
     const { definitions, fields, formContext } = registry;
@@ -104,6 +105,7 @@ class ObjectField extends Component {
 
     const templateProps = {
       title: uiSchema["ui:title"] || title,
+      className,
       description,
       TitleField,
       DescriptionField,
