@@ -12,6 +12,7 @@
     "dist": "npm run build:lib && npm run build:dist",
     "lint": "eslint src test playground",
     "precommit": "lint-staged",
+    "preversion": "npm run dist && npm run build:readme",
     "publish-to-gh-pages": "npm run build:playground && gh-pages --dist build/",
     "publish-to-npm": "npm run build:readme && npm run dist && npm publish",
     "start": "node devServer.js",
