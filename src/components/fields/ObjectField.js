@@ -10,7 +10,7 @@ import {
 function DefaultObjectFieldTemplate(props) {
   const { TitleField, DescriptionField } = props;
   return (
-    <section>
+    <section className={props.className}>
       {(props.uiSchema["ui:title"] || props.title) && (
         <TitleField
           id={`${props.idSchema.$id}__title`}
