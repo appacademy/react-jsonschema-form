@@ -112,7 +112,7 @@ function DefaultArrayItem(props) {
 
 function DefaultFixedArrayFieldTemplate(props) {
   return (
-    <fieldset className={props.className}>
+    <section className={props.className}>
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
         TitleField={props.TitleField}
@@ -141,13 +141,13 @@ function DefaultFixedArrayFieldTemplate(props) {
           disabled={props.disabled || props.readonly}
         />
       )}
-    </fieldset>
+    </section>
   );
 }
 
 function DefaultNormalArrayFieldTemplate(props) {
   return (
-    <fieldset className={props.className}>
+    <section className={props.className}>
       <ArrayFieldTitle
         key={`array-field-title-${props.idSchema.$id}`}
         TitleField={props.TitleField}
@@ -179,7 +179,7 @@ function DefaultNormalArrayFieldTemplate(props) {
           disabled={props.disabled || props.readonly}
         />
       )}
-    </fieldset>
+    </section>
   );
 }
 
