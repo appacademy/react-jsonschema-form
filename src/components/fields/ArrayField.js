@@ -373,6 +373,7 @@ class ArrayField extends Component {
       onFocus,
       idPrefix,
       rawErrors,
+      className,
     } = this.props;
     const title = schema.title === undefined ? name : schema.title;
     const { ArrayFieldTemplate, definitions, fields, formContext } = registry;
@@ -405,7 +406,9 @@ class ArrayField extends Component {
           onFocus,
         });
       }),
-      className: `field field-array field-array-of-${itemsSchema.type}`,
+      className: `field field-array field-array-of-${
+        itemsSchema.type
+      } ${className}`,
       DescriptionField,
       disabled,
       idSchema,
@@ -524,6 +527,7 @@ class ArrayField extends Component {
       onBlur,
       onFocus,
       rawErrors,
+      className,
     } = this.props;
     const title = schema.title || name;
     let items = this.props.formData;
@@ -545,7 +549,7 @@ class ArrayField extends Component {
     // These are the props passed into the render function
     const arrayProps = {
       canAdd: this.canAddItem(items) && additionalSchema,
-      className: "field field-array field-array-fixed-items",
+      className: `field field-array field-array-fixed-items ${className}`,
       disabled,
       idSchema,
       formData,
