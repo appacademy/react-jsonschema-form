@@ -106,14 +106,13 @@ function DefaultTemplate(props) {
     hidden,
     required,
     displayLabel,
-    className,
   } = props;
   if (hidden) {
     return children;
   }
 
   return (
-    <div className={`${classNames} ${className}`}>
+    <div className={classNames}>
       {displayLabel && <Label label={label} required={required} id={id} />}
       {displayLabel && description ? description : null}
       {children}
