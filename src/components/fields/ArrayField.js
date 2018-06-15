@@ -54,10 +54,13 @@ function DefaultArrayItem(props) {
     paddingRight: 6,
     fontWeight: "bold",
   };
+  const inlineRow = React.cloneElement(props.children, {
+    className: "inline-section",
+  });
   return (
     <div key={props.index} className={props.className}>
       <div className={props.hasToolbar ? "col-xs-9" : "col-xs-12"}>
-        {props.children}
+        {inlineRow}
       </div>
 
       {props.hasToolbar && (
