@@ -5,7 +5,7 @@ import sinon from "sinon";
 import { renderIntoDocument } from "react-addons-test-utils";
 import { findDOMNode, render } from "react-dom";
 
-import Form from "../src";
+import { Form } from "../src";
 
 export function createComponent(Component, props) {
   const comp = renderIntoDocument(<Component {...props} />);

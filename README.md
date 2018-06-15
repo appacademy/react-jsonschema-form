@@ -152,7 +152,7 @@ const {default: Form} = JSONSchemaForm;
 import React, { Component } from "react";
 import { render } from "react-dom";
 
-import Form from "react-jsonschema-form";
+import { Form } from "react-jsonschema-form";
 
 const schema = {
   title: "Todo",
