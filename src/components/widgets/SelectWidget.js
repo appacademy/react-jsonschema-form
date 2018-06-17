@@ -55,42 +55,45 @@ function SelectWidget(props) {
   const { enumOptions, enumDisabled } = options;
   const emptyValue = multiple ? [] : "";
   return (
-    <select
-      id={id}
-      multiple={multiple}
-      className={`form-control ${className}`}
-      value={typeof value === "undefined" ? emptyValue : value}
-      required={required}
-      disabled={disabled || readonly}
-      autoFocus={autofocus}
-      onBlur={
-        onBlur &&
-        (event => {
+    <div className="select-container">
+      <select
+        id={id}
+        multiple={multiple}
+        className={`form-control ${className}`}
+        value={typeof value === "undefined" ? emptyValue : value}
+        required={required}
+        disabled={disabled || readonly}
+        autoFocus={autofocus}
+        onBlur={
+          onBlur &&
+          (event => {
+            const newValue = getValue(event, multiple);
+            onBlur(id, processValue(schema, newValue));
+          })
+        }
+        onFocus={
+          onFocus &&
+          (event => {
+            const newValue = getValue(event, multiple);
+            onFocus(id, processValue(schema, newValue));
+          })
+        }
+        onChange={event => {
           const newValue = getValue(event, multiple);
-          onBlur(id, processValue(schema, newValue));
-        })
-      }
-      onFocus={
-        onFocus &&
-        (event => {
-          const newValue = getValue(event, multiple);
-          onFocus(id, processValue(schema, newValue));
-        })
-      }
-      onChange={event => {
-        const newValue = getValue(event, multiple);
-        onChange(processValue(schema, newValue));
-      }}>
-      {!multiple && !schema.default && <option value="">{placeholder}</option>}
-      {enumOptions.map(({ value, label }, i) => {
-        const disabled = enumDisabled && enumDisabled.indexOf(value) != -1;
-        return (
-          <option key={i} value={value} disabled={disabled}>
-            {label}
-          </option>
-        );
-      })}
-    </select>
+          onChange(processValue(schema, newValue));
+        }}>
+        {!multiple &&
+          !schema.default && <option value="">{placeholder}</option>}
+        {enumOptions.map(({ value, label }, i) => {
+          const disabled = enumDisabled && enumDisabled.indexOf(value) != -1;
+          return (
+            <option key={i} value={value} disabled={disabled}>
+              {label}
+            </option>
+          );
+        })}
+      </select>
+    </div>
   );
 }
 
