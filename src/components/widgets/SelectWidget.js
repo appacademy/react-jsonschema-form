@@ -55,7 +55,7 @@ function SelectWidget(props) {
   const { enumOptions, enumDisabled } = options;
   const emptyValue = multiple ? [] : "";
   return (
-    <div className="select-container">
+    <div className={`select-container ${className}`}>
       <select
         id={id}
         multiple={multiple}
