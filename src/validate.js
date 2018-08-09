@@ -1,5 +1,8 @@
 import toPath from "lodash.topath";
 import Ajv from "ajv";
+
+import { isObject, mergeObjects } from "./utils";
+
 const ajv = new Ajv({
   errorDataPath: "property",
   allErrors: true,
@@ -13,8 +16,6 @@ ajv.addFormat(
   "color",
   /^(#?([0-9A-Fa-f]{3}){1,2}\b|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|white|yellow|(rgb\(\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*\))|(rgb\(\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*\)))$/
 );
-
-import { isObject, mergeObjects } from "./utils";
 
 function toErrorSchema(errors) {
   // Transforms a ajv validation errors list:
@@ -69,11 +70,9 @@ export function toErrorList(errorSchema, fieldName = "root") {
   let errorList = [];
   if ("__errors" in errorSchema) {
     errorList = errorList.concat(
-      errorSchema.__errors.map(stack => {
-        return {
-          stack: `${fieldName}: ${stack}`,
-        };
-      })
+      errorSchema.__errors.map(stack => ({
+        stack: `${fieldName}: ${stack}`,
+      }))
     );
   }
   return Object.keys(errorSchema).reduce((acc, key) => {
@@ -95,14 +94,16 @@ function createErrorHandler(formData) {
     },
   };
   if (isObject(formData)) {
-    return Object.keys(formData).reduce((acc, key) => {
-      return { ...acc, [key]: createErrorHandler(formData[key]) };
-    }, handler);
+    return Object.keys(formData).reduce(
+      (acc, key) => ({ ...acc, [key]: createErrorHandler(formData[key]) }),
+      handler
+    );
   }
   if (Array.isArray(formData)) {
-    return formData.reduce((acc, value, key) => {
-      return { ...acc, [key]: createErrorHandler(value) };
-    }, handler);
+    return formData.reduce(
+      (acc, value, key) => ({ ...acc, [key]: createErrorHandler(value) }),
+      handler
+    );
   }
   return handler;
 }
@@ -111,7 +112,8 @@ function unwrapErrorHandler(errorHandler) {
   return Object.keys(errorHandler).reduce((acc, key) => {
     if (key === "addError") {
       return acc;
-    } else if (key === "__errors") {
+    }
+    if (key === "__errors") {
       return { ...acc, [key]: errorHandler[key] };
     }
     return { ...acc, [key]: unwrapErrorHandler(errorHandler[key]) };
@@ -129,7 +131,7 @@ function transformAjvErrors(errors = []) {
 
   return errors.map(e => {
     const { dataPath, keyword, message, params } = e;
-    let property = `${dataPath}`;
+    const property = `${dataPath}`;
 
     // put data in expected format
     return {

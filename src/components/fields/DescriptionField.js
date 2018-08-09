@@ -13,13 +13,12 @@ function DescriptionField(props) {
         {description}
       </p>
     );
-  } else {
-    return (
-      <div id={id} className="field-description">
-        {description}
-      </div>
-    );
   }
+  return (
+    <div id={id} className="field-description">
+      {description}
+    </div>
+  );
 }
 
 if (process.env.NODE_ENV !== "production") {

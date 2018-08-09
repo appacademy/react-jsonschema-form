@@ -174,7 +174,7 @@ function computeDefaults(schema, parentDefaults, definitions = {}) {
 
 export function getDefaultFormState(_schema, formData, definitions = {}) {
   if (!isObject(_schema)) {
-    throw new Error("Invalid schema: " + _schema);
+    throw new Error(`Invalid schema: ${_schema}`);
   }
   const schema = retrieveSchema(_schema, definitions, formData);
   const defaults = computeDefaults(schema, _schema.default, definitions);
@@ -219,7 +219,7 @@ export function isObject(thing) {
 
 export function mergeObjects(obj1, obj2, concatArrays = false) {
   // Recursively merge deeply nested objects.
-  var acc = Object.assign({}, obj1); // Prevent mutation of source object.
+  const acc = Object.assign({}, obj1); // Prevent mutation of source object.
   return Object.keys(obj2).reduce((acc, key) => {
     const left = obj1[key],
       right = obj2[key];
@@ -315,11 +315,11 @@ export function isConstant(schema) {
 export function toConstant(schema) {
   if (Array.isArray(schema.enum) && schema.enum.length === 1) {
     return schema.enum[0];
-  } else if (schema.hasOwnProperty("const")) {
-    return schema.const;
-  } else {
-    throw new Error("schema cannot be inferred as a constant");
   }
+  if (schema.hasOwnProperty("const")) {
+    return schema.const;
+  }
+  throw new Error("schema cannot be inferred as a constant");
 }
 
 export function isSelect(_schema, definitions = {}) {
@@ -327,7 +327,8 @@ export function isSelect(_schema, definitions = {}) {
   const altSchemas = schema.oneOf || schema.anyOf;
   if (Array.isArray(schema.enum)) {
     return true;
-  } else if (Array.isArray(altSchemas)) {
+  }
+  if (Array.isArray(altSchemas)) {
     return altSchemas.every(altSchemas => isConstant(altSchemas));
   }
   return false;
@@ -343,7 +344,8 @@ export function isMultiSelect(schema, definitions = {}) {
 export function isFilesArray(schema, uiSchema, definitions = {}) {
   if (uiSchema["ui:widget"] === "files") {
     return true;
-  } else if (schema.items) {
+  }
+  if (schema.items) {
     const itemsSchema = retrieveSchema(schema.items, definitions);
     return itemsSchema.type === "string" && itemsSchema.format === "data-url";
   }
@@ -371,14 +373,13 @@ export function optionsList(schema) {
       const label = (schema.enumNames && schema.enumNames[i]) || String(value);
       return { label, value };
     });
-  } else {
-    const altSchemas = schema.oneOf || schema.anyOf;
-    return altSchemas.map((schema, i) => {
-      const value = toConstant(schema);
-      const label = schema.title || String(value);
-      return { label, value };
-    });
   }
+  const altSchemas = schema.oneOf || schema.anyOf;
+  return altSchemas.map((schema, i) => {
+    const value = toConstant(schema);
+    const label = schema.title || String(value);
+    return { label, value };
+  });
 }
 
 function findSchemaDefinition($ref, definitions = {}) {
@@ -415,13 +416,13 @@ export function retrieveSchema(schema, definitions = {}, formData = {}) {
       definitions,
       formData
     );
-  } else if (schema.hasOwnProperty("dependencies")) {
+  }
+  if (schema.hasOwnProperty("dependencies")) {
     const resolvedSchema = resolveDependencies(schema, definitions, formData);
     return retrieveSchema(resolvedSchema, definitions, formData);
-  } else {
-    // No $ref or dependencies attribute found, returning the original schema.
-    return schema;
   }
+  // No $ref or dependencies attribute found, returning the original schema.
+  return schema;
 }
 
 function resolveDependencies(schema, definitions, formData) {
@@ -456,7 +457,7 @@ function withDependentProperties(schema, additionallyRequired) {
   const required = Array.isArray(schema.required)
     ? Array.from(new Set([...schema.required, ...additionallyRequired]))
     : additionallyRequired;
-  return { ...schema, required: required };
+  return { ...schema, required };
 }
 
 function withDependentSchema(
@@ -466,7 +467,7 @@ function withDependentSchema(
   dependencyKey,
   dependencyValue
 ) {
-  let { oneOf, ...dependentSchema } = retrieveSchema(
+  const { oneOf, ...dependentSchema } = retrieveSchema(
     dependencyValue,
     definitions,
     formData
@@ -543,17 +544,22 @@ export function deepEquals(a, b, ca = [], cb = []) {
   // https://github.com/othiym23/node-deeper
   if (a === b) {
     return true;
-  } else if (typeof a === "function" || typeof b === "function") {
+  }
+  if (typeof a === "function" || typeof b === "function") {
     // Assume all functions are equivalent
     // see https://github.com/mozilla-services/react-jsonschema-form/issues/255
     return true;
-  } else if (typeof a !== "object" || typeof b !== "object") {
+  }
+  if (typeof a !== "object" || typeof b !== "object") {
     return false;
-  } else if (a === null || b === null) {
+  }
+  if (a === null || b === null) {
     return false;
-  } else if (a instanceof Date && b instanceof Date) {
+  }
+  if (a instanceof Date && b instanceof Date) {
     return a.getTime() === b.getTime();
-  } else if (a instanceof RegExp && b instanceof RegExp) {
+  }
+  if (a instanceof RegExp && b instanceof RegExp) {
     return (
       a.source === b.source &&
       a.global === b.global &&
@@ -561,57 +567,57 @@ export function deepEquals(a, b, ca = [], cb = []) {
       a.lastIndex === b.lastIndex &&
       a.ignoreCase === b.ignoreCase
     );
-  } else if (isArguments(a) || isArguments(b)) {
+  }
+  if (isArguments(a) || isArguments(b)) {
     if (!(isArguments(a) && isArguments(b))) {
       return false;
     }
-    let slice = Array.prototype.slice;
+    const slice = Array.prototype.slice;
     return deepEquals(slice.call(a), slice.call(b), ca, cb);
-  } else {
-    if (a.constructor !== b.constructor) {
-      return false;
-    }
+  }
+  if (a.constructor !== b.constructor) {
+    return false;
+  }
 
-    let ka = Object.keys(a);
-    let kb = Object.keys(b);
-    // don't bother with stack acrobatics if there's nothing there
-    if (ka.length === 0 && kb.length === 0) {
-      return true;
-    }
-    if (ka.length !== kb.length) {
-      return false;
-    }
-
-    let cal = ca.length;
-    while (cal--) {
-      if (ca[cal] === a) {
-        return cb[cal] === b;
-      }
-    }
-    ca.push(a);
-    cb.push(b);
-
-    ka.sort();
-    kb.sort();
-    for (var j = ka.length - 1; j >= 0; j--) {
-      if (ka[j] !== kb[j]) {
-        return false;
-      }
-    }
-
-    let key;
-    for (let k = ka.length - 1; k >= 0; k--) {
-      key = ka[k];
-      if (!deepEquals(a[key], b[key], ca, cb)) {
-        return false;
-      }
-    }
-
-    ca.pop();
-    cb.pop();
-
+  const ka = Object.keys(a);
+  const kb = Object.keys(b);
+  // don't bother with stack acrobatics if there's nothing there
+  if (ka.length === 0 && kb.length === 0) {
     return true;
   }
+  if (ka.length !== kb.length) {
+    return false;
+  }
+
+  let cal = ca.length;
+  while (cal--) {
+    if (ca[cal] === a) {
+      return cb[cal] === b;
+    }
+  }
+  ca.push(a);
+  cb.push(b);
+
+  ka.sort();
+  kb.sort();
+  for (let j = ka.length - 1; j >= 0; j--) {
+    if (ka[j] !== kb[j]) {
+      return false;
+    }
+  }
+
+  let key;
+  for (let k = ka.length - 1; k >= 0; k--) {
+    key = ka[k];
+    if (!deepEquals(a[key], b[key], ca, cb)) {
+      return false;
+    }
+  }
+
+  ca.pop();
+  cb.pop();
+
+  return true;
 }
 
 export function shouldRender(comp, nextProps, nextState) {
@@ -641,7 +647,7 @@ export function toIdSchema(
   }
   for (const name in schema.properties || {}) {
     const field = schema.properties[name];
-    const fieldId = idSchema.$id + "_" + name;
+    const fieldId = `${idSchema.$id}_${name}`;
     idSchema[name] = toIdSchema(
       field,
       fieldId,
@@ -666,7 +672,7 @@ export function parseDateString(dateString, includeTime = true) {
   }
   const date = new Date(dateString);
   if (Number.isNaN(date.getTime())) {
-    throw new Error("Unable to parse date " + dateString);
+    throw new Error(`Unable to parse date ${dateString}`);
   }
   return {
     year: date.getUTCFullYear(),
@@ -690,7 +696,7 @@ export function toDateString(
 export function pad(num, size) {
   let s = String(num);
   while (s.length < size) {
-    s = "0" + s;
+    s = `0${s}`;
   }
   return s;
 }
@@ -713,9 +719,7 @@ export function dataURItoBlob(dataURI) {
   // Get mime-type from params
   const type = params[0].replace("data:", "");
   // Filter the name property from params
-  const properties = params.filter(param => {
-    return param.split("=")[0] === "name";
-  });
+  const properties = params.filter(param => param.split("=")[0] === "name");
   // Look for the name and use unknown if no name property.
   let name;
   if (properties.length !== 1) {

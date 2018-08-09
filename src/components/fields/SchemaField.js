@@ -36,15 +36,13 @@ function getFieldComponent(schema, uiSchema, idSchema, fields) {
   const componentName = COMPONENT_TYPES[getSchemaType(schema)];
   return componentName in fields
     ? fields[componentName]
-    : () => {
-        return (
-          <UnsupportedField
-            schema={schema}
-            idSchema={idSchema}
-            reason={`Unknown field type ${schema.type}`}
-          />
-        );
-      };
+    : () => (
+        <UnsupportedField
+          schema={schema}
+          idSchema={idSchema}
+          reason={`Unknown field type ${schema.type}`}
+        />
+      );
 }
 
 function Label(props) {
@@ -82,13 +80,11 @@ function ErrorList(props) {
     <div>
       <p />
       <ul className="error-detail bs-callout bs-callout-info">
-        {errors.map((error, index) => {
-          return (
-            <li className="text-danger" key={index}>
-              {error}
-            </li>
-          );
-        })}
+        {errors.map((error, index) => (
+          <li className="text-danger" key={index}>
+            {error}
+          </li>
+        ))}
       </ul>
     </div>
   );
@@ -242,7 +238,7 @@ function SchemaFieldRender(props) {
   const fieldProps = {
     description: (
       <DescriptionField
-        id={id + "__description"}
+        id={`${id}__description`}
         description={description}
         formContext={formContext}
       />

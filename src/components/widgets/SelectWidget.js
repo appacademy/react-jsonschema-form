@@ -10,15 +10,14 @@ import { asNumber } from "../../utils";
 function processValue({ type, items }, value) {
   if (value === "") {
     return undefined;
-  } else if (
-    type === "array" &&
-    items &&
-    ["number", "integer"].includes(items.type)
-  ) {
+  }
+  if (type === "array" && items && ["number", "integer"].includes(items.type)) {
     return value.map(asNumber);
-  } else if (type === "boolean") {
+  }
+  if (type === "boolean") {
     return value === "true";
-  } else if (type === "number") {
+  }
+  if (type === "number") {
     return asNumber(value);
   }
   return value;
@@ -30,9 +29,8 @@ function getValue(event, multiple) {
       .call(event.target.options)
       .filter(o => o.selected)
       .map(o => o.value);
-  } else {
-    return event.target.value;
   }
+  return event.target.value;
 }
 
 function SelectWidget(props) {

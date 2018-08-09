@@ -15,9 +15,8 @@ function TextareaWidget(props) {
     onBlur,
     onFocus,
   } = props;
-  const _onChange = ({ target: { value } }) => {
-    return onChange(value === "" ? options.emptyValue : value);
-  };
+  const _onChange = ({ target: { value } }) =>
+    onChange(value === "" ? options.emptyValue : value);
   return (
     <textarea
       id={id}
