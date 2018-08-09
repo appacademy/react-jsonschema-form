@@ -1,35 +1,18 @@
 import React from "react";
 
-class ErrorList extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      visible: true,
-    };
-  }
-
-  componentDidMount() {
-    setTimeout(() => this.setState({ visible: false }), 3000);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.errors[0]) {
-      this.setState({ visible: true }, () => {
-        setTimeout(() => this.setState({ visible: false }), 3000);
-      });
-    }
-  }
-
-  render() {
-    const { errors } = this.props;
-    const { visible } = this.state;
-
-    return (
-      <div className={`panel panel-danger errors error-snackbar-${visible}`}>
-        {errors[0].stack}
+export default function ErrorList({ errors }) {
+  return (
+    <div className="panel panel-danger errors all-errors">
+      <div className="panel-heading">
+        <h3 className="panel-title">Errors</h3>
       </div>
-    );
-  }
+      <ul className="list-group">
+        {errors.map((error, i) => (
+          <li key={i} className="list-group-item text-danger">
+            {error.stack}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
-
-export default ErrorList;
