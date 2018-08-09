@@ -6,6 +6,7 @@
       {
         "extensions": [".js", ".jsx"]
       }
-    ]
+    ],
+    "quotes": [0]
   }
 }
