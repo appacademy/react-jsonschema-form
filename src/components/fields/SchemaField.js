@@ -77,7 +77,7 @@ function ErrorList(props) {
     return <div />;
   }
   return (
-    <div>
+    <div className="field-error-list">
       <p />
       <ul className="error-detail bs-callout bs-callout-info">
         {errors.map((error, index) => (
