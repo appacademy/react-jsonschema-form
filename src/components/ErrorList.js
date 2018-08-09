@@ -4,7 +4,7 @@ export default function ErrorList(props) {
   const { errors } = props;
   return (
     <div className="panel panel-danger errors">
-      <div>
+      <div className="error-modal-content">
         <div className="panel-heading">
           <h3 className="panel-title">Errors</h3>
         </div>
