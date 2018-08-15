@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import FontAwesomeIcons from "react-icons/fa";
 
 import UnsupportedField from "./UnsupportedField";
 import {
@@ -36,12 +37,13 @@ function ArrayFieldDescription({ DescriptionField, idSchema, description }) {
 
 function IconBtn(props) {
   const { type = "default", icon, className, ...otherProps } = props;
+  const DynamicIcon = FontAwesomeIcons[icon] || "div";
   return (
     <button
       type="button"
       className={`btn btn-${type} ${className}`}
       {...otherProps}>
-      <i className={`glyphicon glyphicon-${icon}`} />
+      {React.createElement(DynamicIcon)}
     </button>
   );
 }
@@ -74,7 +76,7 @@ function DefaultArrayItem(props) {
             <div className="up-down-group">
               {(props.hasMoveUp || props.hasMoveDown) && (
                 <IconBtn
-                  icon="arrow-up"
+                  icon="FaArrowUp"
                   className="array-item-move-up"
                   tabIndex="-1"
                   style={btnStyle}
@@ -87,7 +89,7 @@ function DefaultArrayItem(props) {
 
               {(props.hasMoveUp || props.hasMoveDown) && (
                 <IconBtn
-                  icon="arrow-down"
+                  icon="FaArrowDown"
                   className="array-item-move-down"
                   tabIndex="-1"
                   style={btnStyle}
@@ -102,7 +104,7 @@ function DefaultArrayItem(props) {
             {props.hasRemove && (
               <IconBtn
                 type="danger"
-                icon="remove"
+                icon="FaTimesCircle"
                 className="array-item-remove"
                 tabIndex="-1"
                 style={btnStyle}
@@ -684,7 +686,7 @@ function AddButton({ onClick, disabled }) {
       <p className="col-xs-3 col-xs-offset-9 array-item-add text-right">
         <IconBtn
           type="info"
-          icon="plus"
+          icon="FaPlus"
           className="btn-add col-xs-12"
           tabIndex="0"
           onClick={onClick}
