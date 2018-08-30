@@ -1,5 +1,5 @@
 import React from "react";
-import Select from "react-select";
+import Creatable from "react-select/lib/Creatable";
 
 export default class Autocomplete extends React.Component {
   constructor(props) {
@@ -40,7 +40,7 @@ export default class Autocomplete extends React.Component {
   render() {
     const { selectedOption, options } = this.state;
     return (
-      <Select
+      <Creatable
         value={selectedOption}
         onChange={this.onChange}
         options={options}
