@@ -4,6 +4,7 @@ import Select from "react-select";
 export default class Autocomplete extends React.Component {
   constructor(props) {
     super(props);
+    console.log("IN AC CONSTRUCTOR", this.props.schema);
     this.state = {
       selectedOption: null,
       options: [{}],
