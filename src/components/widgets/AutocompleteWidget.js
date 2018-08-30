@@ -6,7 +6,6 @@ export default class Autocomplete extends React.Component {
     super(props);
     this.state = {
       selectedOption: null,
-      options: [{}],
     };
     this.fetchOptions = this.props.schema.fetchOptions;
   }
@@ -16,25 +15,23 @@ export default class Autocomplete extends React.Component {
     this.props.onChange(e.value);
   };
 
-  onInputChange = e => {
-    this.fetchOptions(e).then(data => {
-      const options = data.map(company => ({
-        value: company,
-        label: company,
-      }));
-
-      this.setState({ options });
+  loadOptions = inputValue =>
+    new Promise(resolve => {
+      this.props.schema.fetchOptions(inputValue).then(data => {
+        const options = data.map(el => ({ label: el, value: el }));
+        resolve(options);
+      });
     });
-  };
 
   render() {
     const { selectedOption, options } = this.state;
     return (
       <AsyncCreatable
+        cacheOptions
+        loadOptions={this.loadOptions}
         value={selectedOption}
         onChange={this.onChange}
         options={options}
-        onInputChange={this.onInputChange}
       />
     );
   }
