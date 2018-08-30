@@ -17,11 +17,23 @@ export default class Autocomplete extends React.Component {
   };
 
   onInputChange = e => {
-    // this.props.schema.fetchOptions(e).then(data => {
-    //   console.log(data);
-    //   this.setState({ options: data });
-    // });
-    this.fetchOptions(e);
+    this.fetchOptions(e).then(data => {
+      // initiate new options with the current search to account for
+      // case where the current search doesn't exist yet as a company in
+      // our database:
+      const options = [{ value: e, label: e }];
+      data.forEach(company => {
+        // TODO: will need to consider casing:
+        if (company !== e) {
+          options.push({
+            value: company,
+            label: company,
+          });
+        }
+      });
+
+      this.setState({ options });
+    });
     console.log(e);
   };
 
