@@ -18,23 +18,13 @@ export default class Autocomplete extends React.Component {
 
   onInputChange = e => {
     this.fetchOptions(e).then(data => {
-      // initiate new options with the current search to account for
-      // case where the current search doesn't exist yet as a company in
-      // our database:
-      const options = [{ value: e, label: e }];
-      data.forEach(company => {
-        // TODO: will need to consider fuzzy search:
-        if (company.toLowerCase() !== e.toLowerCase()) {
-          options.push({
-            value: company,
-            label: company,
-          });
-        }
-      });
+      const options = data.map(company => ({
+        value: company,
+        label: company,
+      }));
 
       this.setState({ options });
     });
-    console.log(e);
   };
 
   render() {
