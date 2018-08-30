@@ -1,5 +1,5 @@
 import React from "react";
-import Creatable from "react-select/lib/Creatable";
+import AsyncCreatable from "react-select/lib/AsyncCreatable";
 
 export default class Autocomplete extends React.Component {
   constructor(props) {
@@ -30,7 +30,7 @@ export default class Autocomplete extends React.Component {
   render() {
     const { selectedOption, options } = this.state;
     return (
-      <Creatable
+      <AsyncCreatable
         value={selectedOption}
         onChange={this.onChange}
         options={options}
