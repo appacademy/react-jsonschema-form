@@ -4,11 +4,11 @@ import Select from "react-select";
 export default class Autocomplete extends React.Component {
   constructor(props) {
     super(props);
-    console.log("IN AC CONSTRUCTOR", this.props.schema);
     this.state = {
       selectedOption: null,
       options: [{}],
     };
+    this.fetchOptions = this.props.schema.fetchOptions;
   }
 
   onChange = e => {
@@ -21,7 +21,7 @@ export default class Autocomplete extends React.Component {
     //   console.log(data);
     //   this.setState({ options: data });
     // });
-    this.props.schema.fetchOptions();
+    this.fetchOptions(e);
     console.log(e);
   };
 
