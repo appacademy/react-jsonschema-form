@@ -1,83 +1,46 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Select from "react-select";
 
-class BaseInput extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedOption: null,
-      options: [{}],
-    };
+function BaseInput(props) {
+  // Note: since React 15.2.0 we can't forward unknown element attributes, so we
+  // exclude the "options" and "schema" ones here.
+  if (!props.id) {
+    console.log("No id for", props);
+    throw new Error(`no id for props ${JSON.stringify(props)}`);
   }
+  const {
+    value,
+    readonly,
+    disabled,
+    autofocus,
+    onBlur,
+    onFocus,
+    options,
+    schema,
+    formContext,
+    registry,
+    ...inputProps
+  } = props;
 
-  onChange = e => {
-    this.setState({ selectedOption: e });
-    this.props.onChange(e.value);
-  };
+  inputProps.type = options.inputType || inputProps.type || "text";
+  const _onChange = ({ target: { value } }) =>
+    props.onChange(value === "" ? options.emptyValue : value);
 
-  onInputChange = e => {
-    // this.props.schema.fetchOptions(e).then(data => {
-    //   console.log(data);
-    //   this.setState({ options: data });
-    // });
-    console.log(e);
-  };
+  const { rawErrors, ...cleanProps } = inputProps;
 
-  render() {
-    const { props } = this;
-
-    // Note: since React 15.2.0 we can't forward unknown element attributes, so we
-    // exclude the "options" and "schema" ones here.
-    if (!props.id) {
-      console.log("No id for", props);
-      throw new Error(`no id for props ${JSON.stringify(props)}`);
-    }
-    const {
-      value,
-      readonly,
-      disabled,
-      autofocus,
-      onBlur,
-      onFocus,
-      options,
-      schema,
-      formContext,
-      registry,
-      ...inputProps
-    } = props;
-
-    inputProps.type = options.inputType || inputProps.type || "text";
-    const _onChange = ({ target: { value } }) =>
-      props.onChange(value === "" ? options.emptyValue : value);
-
-    const { rawErrors, ...cleanProps } = inputProps;
-    if (props.schema.autocomplete) {
-      return (
-        <Select
-          value={this.state.selectedOption}
-          onChange={this.onChange}
-          options={this.state.options}
-          onInputChange={this.onInputChange}
-        />
-      );
-    }
-    return (
-      <input
-        className="form-control"
-        readOnly={readonly}
-        disabled={disabled}
-        autoFocus={autofocus}
-        value={value == null ? "" : value}
-        {...cleanProps}
-        onChange={_onChange}
-        onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}
-        onFocus={
-          onFocus && (event => onFocus(inputProps.id, event.target.value))
-        }
-      />
-    );
-  }
+  return (
+    <input
+      className="form-control"
+      readOnly={readonly}
+      disabled={disabled}
+      autoFocus={autofocus}
+      value={value == null ? "" : value}
+      {...cleanProps}
+      onChange={_onChange}
+      onBlur={onBlur && (event => onBlur(inputProps.id, event.target.value))}
+      onFocus={onFocus && (event => onFocus(inputProps.id, event.target.value))}
+    />
+  );
 }
 
 BaseInput.defaultProps = {
