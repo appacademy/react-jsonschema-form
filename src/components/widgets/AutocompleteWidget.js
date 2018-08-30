@@ -23,8 +23,8 @@ export default class Autocomplete extends React.Component {
       // our database:
       const options = [{ value: e, label: e }];
       data.forEach(company => {
-        // TODO: will need to consider casing:
-        if (company !== e) {
+        // TODO: will need to consider fuzzy search:
+        if (company.toLowerCase() !== e.toLowerCase()) {
           options.push({
             value: company,
             label: company,
