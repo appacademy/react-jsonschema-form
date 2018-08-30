@@ -6,26 +6,22 @@ class BaseInput extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      value: null,
-      options: [
-        {
-          value: "test",
-          label: "Test",
-        },
-      ],
+      selectedOption: null,
+      options: [{}],
     };
   }
 
   onChange = e => {
-    this.setState({ value: e });
+    this.setState({ selectedOption: e });
     this.props.onChange(e.value);
   };
 
   onInputChange = e => {
-    this.props.schema.fetchOptions(e).then(data => {
-      console.log(data);
-      this.setState({ options: data });
-    });
+    // this.props.schema.fetchOptions(e).then(data => {
+    //   console.log(data);
+    //   this.setState({ options: data });
+    // });
+    console.log(e);
   };
 
   render() {
@@ -59,7 +55,7 @@ class BaseInput extends React.Component {
     if (props.schema.autocomplete) {
       return (
         <Select
-          value={this.state.value}
+          value={this.state.selectedOption}
           onChange={this.onChange}
           options={this.state.options}
           onInputChange={this.onInputChange}
