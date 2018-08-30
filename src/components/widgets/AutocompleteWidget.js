@@ -20,6 +20,7 @@ export default class Autocomplete extends React.Component {
     //   console.log(data);
     //   this.setState({ options: data });
     // });
+    this.props.schema.fetchOptions();
     console.log(e);
   };
 
