@@ -28,6 +28,7 @@ export default class Autocomplete extends React.Component {
     return (
       <AsyncCreatable
         cacheOptions
+        placeholder="Search..."
         loadOptions={this.loadOptions}
         value={selectedOption}
         onChange={this.onChange}
