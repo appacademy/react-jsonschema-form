@@ -10,7 +10,7 @@ export default class Autocomplete extends React.Component {
     };
 
     const { schema } = this.props;
-    const { fetchOptions, debounceDuration = 300 } = schema;
+    const { fetchOptions, debounceDuration = 0 } = schema;
 
     this.debouncedFetch = debounce((inputValue, callback) => {
       fetchOptions(inputValue).then(result => {
