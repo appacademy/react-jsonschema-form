@@ -1,6 +1,6 @@
 import React from "react";
 import AsyncCreatable from "react-select/lib/AsyncCreatable";
-import PreloadedAutocompleteWidget from "./PreloadedAutocompleteWidge";
+import debounce from "debounce";
 
 export default class Autocomplete extends React.Component {
   constructor(props) {
@@ -8,7 +8,16 @@ export default class Autocomplete extends React.Component {
     this.state = {
       selectedOption: null,
     };
-    this.fetchOptions = this.props.schema.fetchOptions;
+
+    const { schema } = this.props;
+    const { fetchOptions, debounceDuration = 300 } = schema;
+
+    this.debouncedFetch = debounce((inputValue, callback) => {
+      fetchOptions(inputValue).then(result => {
+        const options = result.map(el => ({ label: el, value: el }));
+        callback(options);
+      });
+    }, parseInt(debounceDuration, 10));
   }
 
   onChange = e => {
@@ -16,27 +25,13 @@ export default class Autocomplete extends React.Component {
     this.props.onChange(e.value);
   };
 
-  loadOptions = inputValue =>
-    new Promise(resolve => {
-      this.fetchOptions(inputValue).then(data => {
-        const options = data.map(el => ({ label: el, value: el }));
-        resolve(options);
-      });
-    });
-
   render() {
-    const { selectedOption, options } = this.state;
-    const {
-      schema: { preloaded },
-    } = this.props;
-    if (preloaded) {
-      return <PreloadedAutocompleteWidget {...this.props} />;
-    }
+    const { selectedOption } = this.state;
     return (
       <AsyncCreatable
         cacheOptions
         placeholder="Search..."
-        loadOptions={this.loadOptions}
+        loadOptions={this.debouncedFetch}
         value={selectedOption}
         onChange={this.onChange}
       />
