@@ -1,5 +1,6 @@
 import React from "react";
 import AsyncCreatable from "react-select/lib/AsyncCreatable";
+import PreloadedAutocompleteWidget from "./PreloadedAutocompleteWidge";
 
 export default class Autocomplete extends React.Component {
   constructor(props) {
@@ -17,7 +18,7 @@ export default class Autocomplete extends React.Component {
 
   loadOptions = inputValue =>
     new Promise(resolve => {
-      this.props.schema.fetchOptions(inputValue).then(data => {
+      this.fetchOptions(inputValue).then(data => {
         const options = data.map(el => ({ label: el, value: el }));
         resolve(options);
       });
@@ -25,6 +26,12 @@ export default class Autocomplete extends React.Component {
 
   render() {
     const { selectedOption, options } = this.state;
+    const {
+      schema: { preloaded },
+    } = this.props;
+    if (preloaded) {
+      return <PreloadedAutocompleteWidget {...this.props} />;
+    }
     return (
       <AsyncCreatable
         cacheOptions
@@ -32,7 +39,6 @@ export default class Autocomplete extends React.Component {
         loadOptions={this.loadOptions}
         value={selectedOption}
         onChange={this.onChange}
-        options={options}
       />
     );
   }
