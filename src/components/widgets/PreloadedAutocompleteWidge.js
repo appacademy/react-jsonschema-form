@@ -21,7 +21,7 @@ export default class PreloadedAutocomplete extends React.Component {
     // fetchOptions once
     // cache it in a global cache of the options.
     // on input change search in the cache of options'
-    this.fetchOptions.then(possibleOptions => {
+    this.fetchOptions().then(possibleOptions => {
       const possibleOptionsCache = possibleOptions.map(option => ({
         value: option,
         label: option,
