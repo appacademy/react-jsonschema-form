@@ -5,11 +5,15 @@ import debounce from "debounce";
 export default class Autocomplete extends React.Component {
   constructor(props) {
     super(props);
+    const { schema, value } = this.props;
+    let prefilledOption;
+    if (value) {
+      prefilledOption = { label: value, value };
+    }
     this.state = {
-      selectedOption: null,
+      selectedOption: prefilledOption || null,
     };
 
-    const { schema } = this.props;
     const { fetchOptions, debounceDuration = 0 } = schema;
 
     this.debouncedFetch = debounce((inputValue, callback) => {
