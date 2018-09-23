@@ -1,5 +1,6 @@
 import React from "react";
 import AsyncCreatable from "react-select/lib/AsyncCreatable";
+import AsyncSelect from "react-select/lib/Async";
 import debounce from "debounce";
 
 export default class Autocomplete extends React.Component {
@@ -31,14 +32,17 @@ export default class Autocomplete extends React.Component {
 
   render() {
     const { selectedOption } = this.state;
-    return (
-      <AsyncCreatable
-        cacheOptions
-        placeholder="Search..."
-        loadOptions={this.debouncedFetch}
-        value={selectedOption}
-        onChange={this.onChange}
-      />
-    );
+    const { schema } = this.props;
+    const autoCompleteProps = {
+      cacheOptions: true,
+      placeholder: "Search...",
+      loadOptions: this.debouncedFetch,
+      value: selectedOption,
+      onChange: this.onChange,
+    };
+    if (schema.creatable) {
+      return <AsyncCreatable {...autoCompleteProps} />;
+    }
+    return <AsyncSelect {...autoCompleteProps} />;
   }
 }
