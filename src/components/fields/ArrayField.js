@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import FontAwesomeIcons from "react-icons/fa";
+import * as FontAwesomeIcons from "react-icons/fa";
 
 import UnsupportedField from "./UnsupportedField";
 import {
