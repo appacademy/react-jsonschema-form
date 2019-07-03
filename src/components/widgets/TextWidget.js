@@ -1,8 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
+import AutocompleteWidget from "./AutocompleteWidget";
 
 function TextWidget(props) {
   const { BaseInput } = props.registry.widgets;
+  if (props.schema.autocomplete) {
+    return <AutocompleteWidget {...props} />;
+  }
   return <BaseInput {...props} />;
 }
 
