@@ -35,7 +35,7 @@ export default class Autocomplete extends React.Component {
     const { schema } = this.props;
     const autoCompleteProps = {
       cacheOptions: true,
-      placeholder: "Search...",
+      placeholder: schema.creatable || "Search...",
       loadOptions: this.debouncedFetch,
       value: selectedOption,
       onChange: this.onChange,
